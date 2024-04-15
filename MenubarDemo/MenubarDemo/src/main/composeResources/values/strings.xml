@@ -1,0 +1,7 @@
+<resources>
+    <string name="file">File</string>
+    <string name="quit">Quit</string>
+
+    <string name="help">Help</string>
+    <string name="about">About</string>
+</resources>
