@@ -1,7 +1,11 @@
 <resources>
+    <string name="app_name">MenubarDemo</string>
+
     <string name="file">File</string>
     <string name="quit">Quit</string>
 
     <string name="help">Help</string>
     <string name="about">About</string>
+
+    <string name="about_title">About MenuBarDemo</string>
 </resources>

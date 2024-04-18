@@ -1,12 +1,22 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import java.io.FileInputStream
+import java.io.InputStreamReader
+import java.util.*
 
 plugins {
     kotlin("jvm")
     id("org.jetbrains.compose")
 }
 
+val properties = Properties()
+val file = rootProject.file("src/main/resources/version.properties")
+if (file.isFile) {
+    InputStreamReader(FileInputStream(file), Charsets.UTF_8).use { reader ->
+        properties.load(reader)
+    }
+} else error("${file.absolutePath} not found")
+version = properties.getProperty("VERSION")
 group = "de.thomaskuenneth.kotlinconf24.menubardemo"
-version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -21,12 +31,11 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "MainKt"
-
+        mainClass = "de.thomaskuenneth.kotlinconf24.menubardemo.MainKt"
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "menubardemo"
-            packageVersion = "1.0.0"
+            packageVersion = version.toString()
         }
     }
 }
