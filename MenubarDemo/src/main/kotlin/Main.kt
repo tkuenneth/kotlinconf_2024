@@ -19,20 +19,24 @@ fun FrameWindowScope.App(exitApplication: () -> Unit) {
     var showAboutDialog by remember { mutableStateOf(false) }
     MaterialTheme {
         MenuBar {
-            Menu(text = stringResource(Res.string.file)) {
-                Item(
-                    text = stringResource(Res.string.quit),
-                    shortcut = KeyShortcut(Key.F4, alt = true),
-                    onClick = exitApplication
-                )
+            if (!IS_MACOS) {
+                Menu(text = stringResource(Res.string.file)) {
+                    Item(
+                        text = stringResource(Res.string.quit),
+                        shortcut = KeyShortcut(Key.F4, alt = true),
+                        onClick = exitApplication
+                    )
+                }
             }
             Menu(text = stringResource(Res.string.help)) {
-                Item(
-                    text = stringResource(Res.string.about),
-                    onClick = {
-                        showAboutDialog = true
-                    }
-                )
+                if (!IS_MACOS) {
+                    Item(
+                        text = stringResource(Res.string.about),
+                        onClick = {
+                            showAboutDialog = true
+                        }
+                    )
+                }
             }
         }
         if (showAboutDialog) {
