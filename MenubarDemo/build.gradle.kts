@@ -34,7 +34,7 @@ compose.desktop {
         mainClass = "de.thomaskuenneth.kotlinconf24.menubardemo.MainKt"
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "menubardemo"
+            packageName = "MenubarDemo"
             packageVersion = version.toString()
         }
     }

@@ -12,11 +12,20 @@ import de.thomaskuenneth.kotlinconf24.menubardemo.menubardemo.generated.resource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import java.awt.Desktop
+import java.awt.desktop.AboutHandler
+import java.awt.desktop.PreferencesHandler
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun FrameWindowScope.App(exitApplication: () -> Unit) {
     var showAboutDialog by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        with(Desktop.getDesktop()) {
+            installAboutHandler { showAboutDialog = true }
+            installPreferencesHandler { showAboutDialog = true }
+        }
+    }
     MaterialTheme {
         MenuBar {
             if (!IS_MACOS) {
@@ -55,5 +64,17 @@ fun main() = application {
         onCloseRequest = ::exitApplication
     ) {
         App(::exitApplication)
+    }
+}
+
+private fun Desktop.installAboutHandler(handler: AboutHandler) {
+    if (isSupported(Desktop.Action.APP_ABOUT)) {
+        setAboutHandler(handler)
+    }
+}
+
+private fun Desktop.installPreferencesHandler(handler: PreferencesHandler) {
+    if (isSupported(Desktop.Action.APP_ABOUT)) {
+        setPreferencesHandler(handler)
     }
 }
