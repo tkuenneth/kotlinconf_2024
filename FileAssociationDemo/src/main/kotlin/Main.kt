@@ -17,6 +17,12 @@ import java.awt.Desktop
 fun App() {
     LaunchedEffect(Unit) {
         with(Desktop.getDesktop()) {
+            setOpenFileHandler { event ->
+                println(event.searchTerm)
+                event.files.forEach {
+                    println(it.absolutePath)
+                }
+            }
         }
     }
     MaterialTheme {
