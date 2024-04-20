@@ -1,5 +1,8 @@
 package de.thomaskuenneth.kotlinconf24.menubardemo
 
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyShortcut
+import androidx.compose.ui.window.FrameWindowScope
 import java.awt.Desktop
 import java.awt.desktop.AboutHandler
 import java.awt.desktop.PreferencesHandler
@@ -27,4 +30,16 @@ fun openUri(uri: URI) {
             browse(uri)
         }
     }
+}
+
+fun FrameWindowScope.openFileDialog() {
+    java.awt.FileDialog(window).isVisible = true
+}
+
+fun create(key: Key): KeyShortcut {
+    return KeyShortcut(
+        key = key,
+        ctrl = !IS_MACOS,
+        meta = IS_MACOS
+    )
 }

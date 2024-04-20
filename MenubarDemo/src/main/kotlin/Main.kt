@@ -30,6 +30,11 @@ fun FrameWindowScope.App(exitApplication: () -> Unit) {
     MaterialTheme {
         MenuBar {
             Menu(text = stringResource(Res.string.file)) {
+                Item(
+                    text = stringResource(Res.string.open),
+                    shortcut = create(Key.O),
+                    onClick = { openFileDialog() }
+                )
                 if (!IS_MACOS) {
                     Item(
                         text = stringResource(Res.string.quit),
