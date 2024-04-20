@@ -9,17 +9,18 @@ import androidx.compose.ui.window.MenuBar
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import de.thomaskuenneth.kotlinconf24.menubardemo.menubardemo.generated.resources.*
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import java.awt.Desktop
-import java.awt.desktop.AboutHandler
-import java.awt.desktop.PreferencesHandler
+import java.net.URI
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun FrameWindowScope.App(exitApplication: () -> Unit) {
     var showAboutDialog by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         with(Desktop.getDesktop()) {
             installAboutHandler { showAboutDialog = true }
@@ -28,8 +29,8 @@ fun FrameWindowScope.App(exitApplication: () -> Unit) {
     }
     MaterialTheme {
         MenuBar {
-            if (!IS_MACOS) {
-                Menu(text = stringResource(Res.string.file)) {
+            Menu(text = stringResource(Res.string.file)) {
+                if (!IS_MACOS) {
                     Item(
                         text = stringResource(Res.string.quit),
                         shortcut = KeyShortcut(Key.F4, alt = true),
@@ -41,17 +42,19 @@ fun FrameWindowScope.App(exitApplication: () -> Unit) {
                 if (!IS_MACOS) {
                     Item(
                         text = stringResource(Res.string.about),
-                        onClick = {
-                            showAboutDialog = true
-                        }
+                        onClick = { showAboutDialog = true }
                     )
                 }
+                Item(
+                    text = stringResource(Res.string.homepage),
+                    onClick = {
+                        scope.launch { openUri(URI("https://www.thomaskuenneth.de/")) }
+                    }
+                )
             }
         }
         if (showAboutDialog) {
-            AboutDialog {
-                showAboutDialog = false
-            }
+            AboutDialog { showAboutDialog = false }
         }
     }
 }
@@ -64,17 +67,5 @@ fun main() = application {
         onCloseRequest = ::exitApplication
     ) {
         App(::exitApplication)
-    }
-}
-
-private fun Desktop.installAboutHandler(handler: AboutHandler) {
-    if (isSupported(Desktop.Action.APP_ABOUT)) {
-        setAboutHandler(handler)
-    }
-}
-
-private fun Desktop.installPreferencesHandler(handler: PreferencesHandler) {
-    if (isSupported(Desktop.Action.APP_ABOUT)) {
-        setPreferencesHandler(handler)
     }
 }
