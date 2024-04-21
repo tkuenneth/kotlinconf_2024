@@ -28,6 +28,7 @@ repositories {
 dependencies {
     implementation(compose.desktop.currentOs)
     implementation(compose.components.resources)
+    implementation(compose.material3)
 }
 
 compose.desktop {
