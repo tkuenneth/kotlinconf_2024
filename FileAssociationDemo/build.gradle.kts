@@ -1,4 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.compose.desktop.application.tasks.AbstractJPackageTask
 import java.io.FileInputStream
 import java.io.InputStreamReader
 import java.util.*
@@ -38,4 +39,9 @@ compose.desktop {
             packageVersion = version.toString()
         }
     }
+}
+
+tasks.withType<AbstractJPackageTask>().all {
+    freeArgs.add("--file-associations")
+    freeArgs.add(rootProject.file("hello.properties").absolutePath)
 }
