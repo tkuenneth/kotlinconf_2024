@@ -53,6 +53,6 @@ compose.desktop {
 tasks.withType<AbstractJPackageTask>().all {
     if(name.startsWith("package")) {
         freeArgs.add("--file-associations")
-        freeArgs.add(rootProject.file("hello.properties").absolutePath)
+        freeArgs.add(rootProject.file("abc.properties").absolutePath)
     }
 }
