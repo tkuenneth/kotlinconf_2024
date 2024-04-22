@@ -33,7 +33,7 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "FileAssociationDemo"
+        mainClass = "de.thomaskuenneth.kotlinconf24.fileassociationdemo.MainKt"
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "FileAssociationDemo"
@@ -42,6 +42,8 @@ compose.desktop {
             vendor = "Thomas K\u00fcnneth"
             packageVersion = version.toString()
             linux {
+                jvmArgs("--add-opens", "java.desktop/sun.awt.X11=ALL-UNNAMED")
+                jvmArgs("--add-opens", "java.desktop/sun.awt.wl=ALL-UNNAMED")
                 menuGroup = "tools"
             }
         }

@@ -60,6 +60,7 @@ fun App(args: List<String>) {
 
 @OptIn(ExperimentalResourceApi::class)
 fun main(args: Array<String>) = application {
+    setAppName("File Association Demo")
     Window(
         title = stringResource(Res.string.app_name),
         icon = painterResource(Res.drawable.logo),
