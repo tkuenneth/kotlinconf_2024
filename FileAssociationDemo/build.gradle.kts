@@ -44,7 +44,7 @@ compose.desktop {
             linux {
                 jvmArgs("--add-opens", "java.desktop/sun.awt.X11=ALL-UNNAMED")
                 jvmArgs("--add-opens", "java.desktop/sun.awt.wl=ALL-UNNAMED")
-                menuGroup = "tools"
+                menuGroup = "Utility"
             }
         }
     }
