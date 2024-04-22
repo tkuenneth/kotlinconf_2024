@@ -37,12 +37,22 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "FileAssociationDemo"
+            description = "This app showcases file associations"
+            copyright = "© 2024 Thomas K\u00fcnneth. All rights reserved."
+            vendor = "Thomas K\u00fcnneth"
             packageVersion = version.toString()
+            linux {
+                jvmArgs("--add-opens", "java.desktop/sun.awt.X11=ALL-UNNAMED")
+                jvmArgs("--add-opens", "java.desktop/sun.awt.wl=ALL-UNNAMED")
+                menuGroup = "tools"
+            }
         }
     }
 }
 
 tasks.withType<AbstractJPackageTask>().all {
-    freeArgs.add("--file-associations")
-    freeArgs.add(rootProject.file("hello.properties").absolutePath)
+    if(name.startsWith("package")) {
+        freeArgs.add("--file-associations")
+        freeArgs.add(rootProject.file("hello.properties").absolutePath)
+    }
 }
