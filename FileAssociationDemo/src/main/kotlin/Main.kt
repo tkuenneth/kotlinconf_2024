@@ -10,8 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.toMutableStateList
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.*
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import de.thomaskuenneth.kotlinconf24.fileassociationdemo.fileassociationdemo.generated.resources.Res
@@ -23,7 +22,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import java.awt.Desktop
 
-@OptIn(ExperimentalResourceApi::class)
+@OptIn(ExperimentalResourceApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun App(args: List<String>) {
     val fileNames = remember { args.toMutableStateList() }
@@ -38,7 +37,18 @@ fun App(args: List<String>) {
     }
     MaterialTheme {
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize()
+                .onExternalDrag(
+                    onDrop = { externalDragValue ->
+                        with(externalDragValue.dragData) {
+                            if (this is DragData.FilesList) {
+                                fileNames.addAll(readFiles())
+                            } else if (this is DragData.Text) {
+                                println(this.readText())
+                            }
+                        }
+                    }
+                ),
             contentAlignment = Alignment.Center
         ) {
             if (fileNames.isEmpty()) {
