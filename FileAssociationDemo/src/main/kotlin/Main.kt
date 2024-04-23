@@ -22,6 +22,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import java.awt.Desktop
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStreamReader
 import java.io.PrintWriter
 import java.net.ServerSocket
@@ -95,9 +96,10 @@ fun main(args: Array<String>) = application {
 fun sendFiles(args: Array<String>): Boolean {
     return if (args.isNotEmpty()) try {
         val socket = Socket("localhost", 7777)
-        val out = PrintWriter(socket.getOutputStream(), true)
-        args.forEach { filename ->
-            out.println(filename)
+        with(PrintWriter(socket.getOutputStream(), true)) {
+            args.forEach { filename ->
+                println(filename)
+            }
         }
         socket.close()
         true
@@ -109,11 +111,13 @@ fun sendFiles(args: Array<String>): Boolean {
 fun createServerSocket(callback: (String) -> Unit) {
     thread {
         val serverSocket = ServerSocket(7777)
-        val clientSocket = serverSocket.accept()
-        val `in` = BufferedReader(InputStreamReader(clientSocket.getInputStream()))
-        val out = PrintWriter(clientSocket.getOutputStream(), true)
-        while ((`in`.readLine().also { it?.let { message -> callback(message) } }) != null) {
-            out.println("Server: Hello from server!")
+        while (true) {
+            val clientSocket = serverSocket.accept()
+            val reader = BufferedReader(InputStreamReader(clientSocket.getInputStream()))
+            thread {
+                reader.readLine()?.let { message ->  callback(message) }
+                clientSocket.close()
+            }
         }
     }
 }
