@@ -8,6 +8,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Window
@@ -24,12 +26,12 @@ import java.awt.Desktop
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun App(args: List<String>) {
+    val fileNames = remember { args.toMutableStateList() }
     LaunchedEffect(Unit) {
         with(Desktop.getDesktop()) {
             installOpenFileHandler { event ->
-                println(event.searchTerm)
                 event.files.forEach {
-                    println(it.absolutePath)
+                    fileNames.add(it.absolutePath)
                 }
             }
         }
@@ -39,14 +41,14 @@ fun App(args: List<String>) {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            if (args.isEmpty()) {
+            if (fileNames.isEmpty()) {
                 Text(
                     text = stringResource(Res.string.welcome),
                     style = MaterialTheme.typography.bodyLarge
                 )
             } else {
                 LazyColumn {
-                    items(args) { item ->
+                    items(fileNames) { item ->
                         Text(
                             text = item,
                             style = MaterialTheme.typography.labelLarge

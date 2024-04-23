@@ -46,6 +46,11 @@ compose.desktop {
                 jvmArgs("--add-opens", "java.desktop/sun.awt.wl=ALL-UNNAMED")
                 menuGroup = "Utility"
             }
+            macOS {
+                infoPlist {
+                    extraKeysRawXml = macExtraPlistKeys
+                }
+            }
         }
     }
 }
@@ -56,3 +61,24 @@ tasks.withType<AbstractJPackageTask>().all {
         freeArgs.add(rootProject.file("abc.properties").absolutePath)
     }
 }
+
+val macExtraPlistKeys: String
+    get() = """
+    <key>CFBundleDocumentTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeExtensions</key>
+            <array>
+                <string>abc</string>
+            </array>
+            <key>CFBundleTypeName</key>
+            <string>abc</string>
+            <key>CFBundleTypeMIMETypes</key>
+            <array>
+                <string>application/octet-stream</string>
+            </array>
+            <key>CFBundleTypeRole</key>
+            <string>Viewer</string>
+        </dict>
+    </array>
+    """
