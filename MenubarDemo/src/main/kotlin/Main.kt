@@ -1,45 +1,51 @@
 package de.thomaskuenneth.kotlinconf24.menubardemo
 
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.*
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyShortcut
-import androidx.compose.ui.window.FrameWindowScope
-import androidx.compose.ui.window.MenuBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import de.thomaskuenneth.kotlinconf24.menubardemo.menubardemo.generated.resources.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import de.thomaskuenneth.kotlinconf24.menubardemo.menubardemo.generated.resources.Res
+import de.thomaskuenneth.kotlinconf24.menubardemo.menubardemo.generated.resources.app_name
+import de.thomaskuenneth.kotlinconf24.menubardemo.menubardemo.generated.resources.logo
+import de.thomaskuenneth.kotlinconf24.menubardemo.menubardemo.generated.resources.untitled
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import java.awt.Desktop
-import java.net.URI
 
-@OptIn(ExperimentalResourceApi::class)
+
+fun main() = application {
+    App(AppState(applicationScope = this))
+}
+
 @Composable
-fun App(exitApplication: () -> Unit) {
-    var showAboutDialog by remember { mutableStateOf(false) }
-    var showSettingsDialog by remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
+fun ApplicationScope.App(appState: AppState) {
+    val showAboutDialog by appState.showAboutDialog.collectAsState()
+    val showSettingsDialog by appState.showSettingsDialog.collectAsState()
+    val windows by appState.windows.collectAsState()
     LaunchedEffect(Unit) {
         with(Desktop.getDesktop()) {
-            installAboutHandler { showAboutDialog = true }
-            installPreferencesHandler { showSettingsDialog = true }
+            installAboutHandler { appState.setShowAboutDialog(true) }
+            installPreferencesHandler { appState.setShowSettingsDialog(true) }
+            installQuitHandler { _, response -> if (!appState.exit()) response.cancelQuit() }
         }
     }
     MaterialTheme {
-        AppWindow(
-            scope = scope,
-            openAboutDialog = { showAboutDialog = true },
-            exitApplication = exitApplication
-        )
+        windows.forEach { title ->
+            AppWindow(
+                title = title,
+                appState = appState
+            )
+        }
         if (showAboutDialog) {
-            AboutDialog { showAboutDialog = false }
+            AboutDialog { appState.setShowAboutDialog(false) }
         }
         if (showSettingsDialog) {
-            SettingsDialog { showSettingsDialog = false }
+            SettingsDialog { appState.setShowSettingsDialog(false) }
         }
     }
 }
@@ -47,60 +53,14 @@ fun App(exitApplication: () -> Unit) {
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun AppWindow(
-    scope: CoroutineScope,
-    openAboutDialog: () -> Unit,
-    exitApplication: () -> Unit
+    title: String,
+    appState: AppState
 ) {
     Window(
-        title = stringResource(Res.string.app_name),
+        title = "${stringResource(Res.string.app_name)} \u2012 ${title.ifEmpty { stringResource(Res.string.untitled) }}",
         icon = painterResource(Res.drawable.logo),
-        onCloseRequest = exitApplication
+        onCloseRequest = { appState.exit() }
     ) {
-        AppMenuBar(
-            openAboutDialog = openAboutDialog,
-            openUrl = { scope.launch { openUri(URI("https://www.thomaskuenneth.de/")) } },
-            exit = exitApplication
-        )
+        AppMenuBar(appState)
     }
-}
-
-@OptIn(ExperimentalResourceApi::class)
-@Composable
-fun FrameWindowScope.AppMenuBar(
-    openAboutDialog: () -> Unit,
-    openUrl: () -> Unit,
-    exit: () -> Unit
-) {
-    MenuBar {
-        Menu(text = stringResource(Res.string.file)) {
-            Item(
-                text = stringResource(Res.string.open),
-                shortcut = create(Key.O),
-                onClick = { openFileDialog() }
-            )
-            if (!IS_MACOS) {
-                Item(
-                    text = stringResource(Res.string.quit),
-                    shortcut = KeyShortcut(Key.F4, alt = true),
-                    onClick = exit
-                )
-            }
-        }
-        Menu(text = stringResource(Res.string.help)) {
-            if (!IS_MACOS) {
-                Item(
-                    text = stringResource(Res.string.about),
-                    onClick = openAboutDialog
-                )
-            }
-            Item(
-                text = stringResource(Res.string.homepage),
-                onClick = openUrl
-            )
-        }
-    }
-}
-
-fun main() = application {
-    App(::exitApplication)
 }

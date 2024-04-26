@@ -2,10 +2,10 @@ package de.thomaskuenneth.kotlinconf24.menubardemo
 
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyShortcut
-import androidx.compose.ui.window.FrameWindowScope
 import java.awt.Desktop
 import java.awt.desktop.AboutHandler
 import java.awt.desktop.PreferencesHandler
+import java.awt.desktop.QuitHandler
 import java.net.URI
 import java.util.*
 
@@ -24,16 +24,18 @@ fun Desktop.installPreferencesHandler(handler: PreferencesHandler) {
     }
 }
 
+fun Desktop.installQuitHandler(handler: QuitHandler) {
+    if (isSupported(Desktop.Action.APP_QUIT_HANDLER)) {
+        setQuitHandler(handler)
+    }
+}
+
 fun openUri(uri: URI) {
     with(Desktop.getDesktop()) {
         if (isSupported(Desktop.Action.BROWSE)) {
             browse(uri)
         }
     }
-}
-
-fun FrameWindowScope.openFileDialog() {
-    java.awt.FileDialog(window).isVisible = true
 }
 
 fun create(key: Key): KeyShortcut {
