@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import de.thomaskuenneth.kotlinconf24.menubardemo.menubardemo.generated.resources.Res
@@ -23,7 +22,7 @@ fun main() = application {
 }
 
 @Composable
-fun ApplicationScope.App(appState: AppState) {
+fun App(appState: AppState) {
     val showAboutDialog by appState.showAboutDialog.collectAsState()
     val showSettingsDialog by appState.showSettingsDialog.collectAsState()
     val windows by appState.windows.collectAsState()
@@ -35,9 +34,9 @@ fun ApplicationScope.App(appState: AppState) {
         }
     }
     MaterialTheme {
-        windows.forEach { title ->
+        windows.forEach { state ->
             AppWindow(
-                title = title,
+                appWindowState = state,
                 appState = appState
             )
         }
@@ -53,11 +52,11 @@ fun ApplicationScope.App(appState: AppState) {
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun AppWindow(
-    title: String,
+    appWindowState: AppWindowState,
     appState: AppState
 ) {
     Window(
-        title = "${stringResource(Res.string.app_name)} \u2012 ${title.ifEmpty { stringResource(Res.string.untitled) }}",
+        title = "${stringResource(Res.string.app_name)} \u2012 ${appWindowState.title.ifEmpty { stringResource(Res.string.untitled) }}",
         icon = painterResource(Res.drawable.logo),
         onCloseRequest = { appState.exit() }
     ) {

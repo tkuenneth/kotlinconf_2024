@@ -10,7 +10,7 @@ import java.net.URI
 
 class AppState(private val applicationScope: ApplicationScope) {
 
-    private val _windows = MutableStateFlow(mutableStateListOf(""))
+    private val _windows = MutableStateFlow(mutableStateListOf<AppWindowState>())
     val windows = _windows.asStateFlow()
 
     private val _showAboutDialog = MutableStateFlow(false)
@@ -18,6 +18,10 @@ class AppState(private val applicationScope: ApplicationScope) {
 
     private val _showSettingsDialog = MutableStateFlow(false)
     val showSettingsDialog = _showSettingsDialog.asStateFlow()
+
+    init {
+        newWindow()
+    }
 
     fun setShowAboutDialog(show: Boolean) {
         _showAboutDialog.update { show }
@@ -28,7 +32,11 @@ class AppState(private val applicationScope: ApplicationScope) {
     }
 
     fun newWindow(title: String = "") {
-        _windows.value.add(title)
+        _windows.value.add(
+            AppWindowState(
+                title = title
+            )
+        )
     }
 
     fun exit(): Boolean {
