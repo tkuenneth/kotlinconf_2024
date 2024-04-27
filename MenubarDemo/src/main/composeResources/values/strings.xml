@@ -16,4 +16,5 @@
     <string name="settings_text">some settings</string>
 
     <string name="untitled">untitled</string>
+    <string name="toggle">Toggle</string>
 </resources>
