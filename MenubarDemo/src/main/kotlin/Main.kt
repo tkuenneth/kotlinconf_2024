@@ -22,15 +22,12 @@ fun App(appState: AppState) {
         with(Desktop.getDesktop()) {
             installAboutHandler { appState.setShowAboutDialog(true) }
             installPreferencesHandler { appState.setShowSettingsDialog(true) }
-            installQuitHandler { _, response -> if (!appState.exit()) response.cancelQuit() }
+            installQuitHandler { _, response -> appState.exit { canQuit -> if (!canQuit) response.cancelQuit() } }
         }
     }
     MaterialTheme {
         windows.forEach { state ->
-            AppWindow(
-                appWindowState = state,
-                appState = appState
-            )
+            AppWindow(appWindowState = state)
         }
         if (showAboutDialog) {
             AboutDialog { appState.setShowAboutDialog(false) }

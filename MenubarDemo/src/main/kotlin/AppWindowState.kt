@@ -4,7 +4,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class AppWindowState(title: String) {
+class AppWindowState(
+    title: String,
+    val appState: AppState
+) {
 
     private val _title: MutableStateFlow<String> = MutableStateFlow(title)
     val title: StateFlow<String> = _title.asStateFlow()
@@ -14,5 +17,10 @@ class AppWindowState(title: String) {
 
     fun toggleChanged() {
         _changed.value = !_changed.value
+    }
+
+    fun close(): Boolean {
+        appState.removeWindowState(this)
+        return true
     }
 }

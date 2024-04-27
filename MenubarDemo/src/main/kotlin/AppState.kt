@@ -1,11 +1,15 @@
 package de.thomaskuenneth.kotlinconf24.menubardemo
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.window.ApplicationScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.net.URI
 
 class AppState(private val applicationScope: ApplicationScope) {
@@ -18,6 +22,8 @@ class AppState(private val applicationScope: ApplicationScope) {
 
     private val _showSettingsDialog = MutableStateFlow(false)
     val showSettingsDialog = _showSettingsDialog.asStateFlow()
+
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     init {
         newWindow()
@@ -34,15 +40,29 @@ class AppState(private val applicationScope: ApplicationScope) {
     fun newWindow(title: String = "") {
         _windows.value.add(
             AppWindowState(
-                title = title
+                title = title,
+                appState = this
             )
         )
     }
 
-    fun exit(): Boolean {
-        _windows.value.clear()
-        applicationScope.exitApplication()
-        return false
+    fun removeWindowState(state: AppWindowState) {
+        val newList = _windows.value.toMutableStateList()
+        newList.remove(state)
+        _windows.update { newList }
+    }
+
+    fun exit(callback: (Boolean) -> Unit) {
+        scope.launch {
+            scope.launch {
+                for (windowState in _windows.value) {
+                    if (!windowState.close()) break
+                }
+            }.join()
+            val canQuit = windows.value.isEmpty()
+            callback(canQuit)
+            if (canQuit) applicationScope.exitApplication()
+        }
     }
 
     fun visitUs() {

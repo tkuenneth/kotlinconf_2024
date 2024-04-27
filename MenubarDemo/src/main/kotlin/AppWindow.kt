@@ -21,18 +21,15 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun AppWindow(
-    appWindowState: AppWindowState,
-    appState: AppState
-) {
+fun AppWindow(appWindowState: AppWindowState) {
     val title by appWindowState.title.collectAsState()
     val changed by appWindowState.changed.collectAsState()
     Window(
         title = "${if (changed) "*" else ""}${title.ifEmpty { stringResource(Res.string.untitled) }}",
         icon = painterResource(Res.drawable.logo),
-        onCloseRequest = { appState.exit() }
+        onCloseRequest = { appWindowState.close() }
     ) {
-        AppMenuBar(appState)
+        AppMenuBar(appWindowState.appState)
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center

@@ -28,7 +28,7 @@ fun FrameWindowScope.AppMenuBar(appState: AppState) {
                 Item(
                     text = stringResource(Res.string.quit),
                     shortcut = KeyShortcut(Key.F4, alt = true),
-                    onClick = { appState.exit() }
+                    onClick = { appState.exit {} }
                 )
             }
         }
