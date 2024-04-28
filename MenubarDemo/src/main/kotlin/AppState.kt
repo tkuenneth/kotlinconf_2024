@@ -23,7 +23,7 @@ class AppState(private val applicationScope: ApplicationScope) {
     private val _showSettingsDialog = MutableStateFlow(false)
     val showSettingsDialog = _showSettingsDialog.asStateFlow()
 
-    private val scope = CoroutineScope(Dispatchers.IO)
+    val scope = CoroutineScope(Dispatchers.IO)
 
     init {
         newWindow()
@@ -50,6 +50,9 @@ class AppState(private val applicationScope: ApplicationScope) {
         val newList = _windows.value.toMutableStateList()
         newList.remove(state)
         _windows.update { newList }
+        if (windows.value.isEmpty()) {
+            applicationScope.exitApplication()
+        }
     }
 
     fun exit(callback: (Boolean) -> Unit) {
@@ -74,4 +77,6 @@ class AppState(private val applicationScope: ApplicationScope) {
         fileDialog.isVisible = true
         fileDialog.file?.let { newWindow(it) }
     }
+
+    fun save(appWindowState: AppWindowState) {}
 }

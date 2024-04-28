@@ -14,6 +14,7 @@ import de.thomaskuenneth.kotlinconf24.menubardemo.menubardemo.generated.resource
 import de.thomaskuenneth.kotlinconf24.menubardemo.menubardemo.generated.resources.logo
 import de.thomaskuenneth.kotlinconf24.menubardemo.menubardemo.generated.resources.toggle
 import de.thomaskuenneth.kotlinconf24.menubardemo.menubardemo.generated.resources.untitled
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -24,10 +25,15 @@ import org.jetbrains.compose.resources.stringResource
 fun AppWindow(appWindowState: AppWindowState) {
     val title by appWindowState.title.collectAsState()
     val changed by appWindowState.changed.collectAsState()
+    val showAskSave by appWindowState.askSave.collectAsState()
     Window(
         title = "${if (changed) "*" else ""}${title.ifEmpty { stringResource(Res.string.untitled) }}",
         icon = painterResource(Res.drawable.logo),
-        onCloseRequest = { appWindowState.close() }
+        onCloseRequest = {
+            appWindowState.appState.scope.launch {
+                appWindowState.close()
+            }
+        }
     ) {
         AppMenuBar(appWindowState.appState)
         Box(
@@ -37,6 +43,9 @@ fun AppWindow(appWindowState: AppWindowState) {
             Button(onClick = { appWindowState.toggleChanged() }) {
                 Text(text = stringResource(Res.string.toggle))
             }
+        }
+        if (showAskSave == ASK_SAVE.VISIBLE) {
+            AskSaveDialog(appWindowState = appWindowState)
         }
     }
 }

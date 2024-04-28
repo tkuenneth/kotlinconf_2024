@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">MenubarDemo</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="cancel">Cancel</string>
 
     <string name="file">File</string>
     <string name="new">New Window</string>
@@ -17,4 +20,7 @@
 
     <string name="untitled">untitled</string>
     <string name="toggle">Toggle</string>
+
+    <string name="save_changes">Save changes</string>
+    <string name="save_changes_message">Your document contains unsaved changes. Do you want to save them?</string>
 </resources>
