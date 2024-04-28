@@ -6,12 +6,14 @@ import androidx.compose.ui.input.key.KeyShortcut
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.MenuBar
 import de.thomaskuenneth.kotlinconf24.menubardemo.menubardemo.generated.resources.*
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun FrameWindowScope.AppMenuBar(appState: AppState) {
+fun FrameWindowScope.AppMenuBar(appWindowState: AppWindowState) {
+    val appState = appWindowState.appState
     MenuBar {
         Menu(text = stringResource(Res.string.file)) {
             Item(
@@ -23,6 +25,11 @@ fun FrameWindowScope.AppMenuBar(appState: AppState) {
                 text = stringResource(Res.string.open),
                 shortcut = create(Key.O),
                 onClick = { appState.openFileDialog(window) }
+            )
+            Item(
+                text = stringResource(Res.string.close),
+                shortcut = create(Key.W),
+                onClick = { appState.scope.launch { appWindowState.close() } }
             )
             if (!IS_MACOS) {
                 Item(

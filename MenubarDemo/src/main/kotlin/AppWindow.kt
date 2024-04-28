@@ -35,7 +35,7 @@ fun AppWindow(appWindowState: AppWindowState) {
             }
         }
     ) {
-        AppMenuBar(appWindowState.appState)
+        AppMenuBar(appWindowState)
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
