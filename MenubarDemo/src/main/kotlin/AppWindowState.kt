@@ -2,7 +2,7 @@ package de.thomaskuenneth.kotlinconf24.menubardemo
 
 import kotlinx.coroutines.flow.*
 
-enum class ASK_SAVE {
+enum class AskToSave {
     INVISIBLE,
     VISIBLE,
     CANCEL,
@@ -21,8 +21,8 @@ class AppWindowState(
     private val _changed: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val changed: StateFlow<Boolean> = _changed.asStateFlow()
 
-    private val _askSave: MutableStateFlow<ASK_SAVE> = MutableStateFlow(ASK_SAVE.INVISIBLE)
-    val askSave: StateFlow<ASK_SAVE> = _askSave.asStateFlow()
+    private val _askToSave: MutableStateFlow<AskToSave> = MutableStateFlow(AskToSave.INVISIBLE)
+    val askToSave: StateFlow<AskToSave> = _askToSave.asStateFlow()
 
     fun toggleChanged() {
         _changed.update { !_changed.value }
@@ -30,24 +30,24 @@ class AppWindowState(
 
     suspend fun close(): Boolean {
         val close = if (_changed.value) {
-            _askSave.update { ASK_SAVE.VISIBLE }
-            _askSave.first { it != ASK_SAVE.VISIBLE }
-            _askSave.value != ASK_SAVE.CANCEL
+            _askToSave.update { AskToSave.VISIBLE }
+            _askToSave.first { it != AskToSave.VISIBLE }
+            _askToSave.value != AskToSave.CANCEL
         } else true
         if (close) appState.removeWindowState(this)
         return close
     }
 
     fun cancelClose() {
-        _askSave.update { ASK_SAVE.CANCEL }
+        _askToSave.update { AskToSave.CANCEL }
     }
 
     fun closeAndSave() {
         appState.save(this)
-        _askSave.update { ASK_SAVE.SAVE }
+        _askToSave.update { AskToSave.SAVE }
     }
 
     fun closeWithoutSave() {
-        _askSave.update { ASK_SAVE.DONT_SAVE }
+        _askToSave.update { AskToSave.DONT_SAVE }
     }
 }

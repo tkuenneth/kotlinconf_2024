@@ -25,7 +25,7 @@ import org.jetbrains.compose.resources.stringResource
 fun AppWindow(appWindowState: AppWindowState) {
     val title by appWindowState.title.collectAsState()
     val changed by appWindowState.changed.collectAsState()
-    val showAskSave by appWindowState.askSave.collectAsState()
+    val showAskSave by appWindowState.askToSave.collectAsState()
     Window(
         title = "${if (changed) "*" else ""}${title.ifEmpty { stringResource(Res.string.untitled) }}",
         icon = painterResource(Res.drawable.logo),
@@ -44,7 +44,7 @@ fun AppWindow(appWindowState: AppWindowState) {
                 Text(text = stringResource(Res.string.toggle))
             }
         }
-        if (showAskSave == ASK_SAVE.VISIBLE) {
+        if (showAskSave == AskToSave.VISIBLE) {
             window.toFront()
             AskSaveDialog(appWindowState = appWindowState)
         }
