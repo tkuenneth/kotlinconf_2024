@@ -45,6 +45,7 @@ fun AppWindow(appWindowState: AppWindowState) {
             }
         }
         if (showAskSave == ASK_SAVE.VISIBLE) {
+            window.toFront()
             AskSaveDialog(appWindowState = appWindowState)
         }
     }

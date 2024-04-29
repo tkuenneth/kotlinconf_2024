@@ -47,9 +47,7 @@ class AppState(private val applicationScope: ApplicationScope) {
     }
 
     fun removeWindowState(state: AppWindowState) {
-        val newList = _windows.value.toMutableStateList()
-        newList.remove(state)
-        _windows.update { newList }
+        _windows.update { _windows.value.filter { it != state }.toMutableStateList() }
         if (windows.value.isEmpty()) {
             applicationScope.exitApplication()
         }
@@ -58,7 +56,7 @@ class AppState(private val applicationScope: ApplicationScope) {
     fun exit(callback: (Boolean) -> Unit) {
         scope.launch {
             scope.launch {
-                for (windowState in _windows.value) {
+                for (windowState in _windows.value.reversed()) {
                     if (!windowState.close()) break
                 }
             }.join()
