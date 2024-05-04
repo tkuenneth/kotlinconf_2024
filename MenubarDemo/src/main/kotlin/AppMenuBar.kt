@@ -15,10 +15,15 @@ import org.jetbrains.compose.resources.stringResource
 fun FrameWindowScope.AppMenuBar(appWindowState: AppWindowState) {
     val appState = appWindowState.appState
     MenuBar {
-        Menu(text = stringResource(Res.string.file)) {
+        Menu(
+            text = stringResource(Res.string.file),
+            mnemonic = 'F'
+        ) {
             Item(
                 text = stringResource(Res.string.new),
                 shortcut = create(Key.N),
+                mnemonic = 'N',
+                // icon = ...,
                 onClick = { appState.newWindow() }
             )
             Item(
@@ -29,6 +34,7 @@ fun FrameWindowScope.AppMenuBar(appWindowState: AppWindowState) {
             Item(
                 text = stringResource(Res.string.close),
                 shortcut = create(Key.W),
+                mnemonic = 'c',
                 onClick = { appState.scope.launch { appWindowState.close() } }
             )
             if (!IS_MACOS) {
