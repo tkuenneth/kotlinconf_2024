@@ -20,7 +20,7 @@ fun Desktop.installAboutHandler(handler: AboutHandler) {
 }
 
 fun Desktop.installPreferencesHandler(handler: PreferencesHandler) {
-    if (isSupported(Desktop.Action.APP_ABOUT)) {
+    if (isSupported(Desktop.Action.APP_PREFERENCES)) {
         setPreferencesHandler(handler)
     }
 }
