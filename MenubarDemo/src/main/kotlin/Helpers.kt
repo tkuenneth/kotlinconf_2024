@@ -11,6 +11,7 @@ import java.util.*
 
 private val osNameLowerCase = System.getProperty("os.name", "").lowercase(Locale.getDefault())
 val IS_MACOS = osNameLowerCase.contains("mac os x")
+val IS_WINDOWS = osNameLowerCase.contains("windows")
 
 fun Desktop.installAboutHandler(handler: AboutHandler) {
     if (isSupported(Desktop.Action.APP_ABOUT)) {

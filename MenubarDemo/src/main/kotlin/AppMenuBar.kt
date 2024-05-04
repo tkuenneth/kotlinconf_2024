@@ -17,12 +17,12 @@ fun FrameWindowScope.AppMenuBar(appWindowState: AppWindowState) {
     MenuBar {
         Menu(
             text = stringResource(Res.string.file),
-            mnemonic = 'F'
+            mnemonic = 'f'
         ) {
             Item(
                 text = stringResource(Res.string.new),
                 shortcut = create(Key.N),
-                mnemonic = 'N',
+                mnemonic = 'n',
                 // icon = ...,
                 onClick = { appState.newWindow() }
             )
@@ -40,7 +40,7 @@ fun FrameWindowScope.AppMenuBar(appWindowState: AppWindowState) {
             if (!IS_MACOS) {
                 Item(
                     text = stringResource(Res.string.quit),
-                    shortcut = KeyShortcut(Key.F4, alt = true),
+                    shortcut = if (IS_WINDOWS) KeyShortcut(Key.F4, alt = true) else create(Key.Q),
                     onClick = { appState.exit {} }
                 )
             }
