@@ -17,7 +17,6 @@ fun main() = application {
 fun App(appState: AppState) {
     val showAboutDialog by appState.showAboutDialog.collectAsState()
     val showSettingsDialog by appState.showSettingsDialog.collectAsState()
-    val windows by appState.windows.collectAsState()
     LaunchedEffect(Unit) {
         with(Desktop.getDesktop()) {
             installAboutHandler { appState.setShowAboutDialog(true) }
@@ -26,7 +25,7 @@ fun App(appState: AppState) {
         }
     }
     MaterialTheme {
-        windows.forEach { state ->
+        appState.windows.forEach { state ->
             AppWindow(appWindowState = state)
         }
         if (showAboutDialog) {
