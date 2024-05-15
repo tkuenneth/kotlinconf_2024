@@ -51,6 +51,9 @@ compose.desktop {
                     extraKeysRawXml = macExtraPlistKeys
                 }
             }
+            windows {
+                menu = true
+            }
         }
     }
 }
