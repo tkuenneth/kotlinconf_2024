@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">MenubarDemo</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
+    <string name="cancel">Abbruch</string>
+
+    <string name="file">Datei</string>
+    <string name="new">Neues Fenster</string>
+    <string name="open">\u00D6ffnen\u2026</string>
+    <string name="close">Fenster schlie\u00dfen</string>
+    <string name="quit">Beenden</string>
+
+    <string name="help">Hilfe</string>
+    <string name="about">Programminfo</string>
+    <string name="homepage">Besuchen Sie uns\u2026</string>
+
+    <string name="about_title">\u00FCber MenuBarDemo</string>
+
+    <string name="settings_title">Einstellungen</string>
+    <string name="settings_text">Einige Einstellungen</string>
+
+    <string name="untitled">ohne Namen</string>
+    <string name="toggle">Umschalten</string>
+
+    <string name="save_changes">\u00E4nderungen speichern</string>
+    <string name="save_changes_message">Das Dokument enth\u00E4lt ungespeicherte \u00E4nderungen. Sollen diese gespeichert werden?</string>
+</resources>
